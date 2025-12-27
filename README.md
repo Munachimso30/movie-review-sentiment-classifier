@@ -1,44 +1,54 @@
 # Movie Review Sentiment Classifier
 
-## Overview
+Sentiment analysis on movie reviews using TF-IDF features and a logistic regression classifier, served via a FastAPI web app. The project exposes both an HTML form and a JSON API, and is deployed on Render for easy access. [file:1][web:136][web:142]
 
-This project trains a machine learning model to classify movie reviews as positive (1) or negative (0). The model uses TF-IDF text features and a logistic regression classifier implemented in Python with scikit-learn. [web:46][web:53]
+## Live demo
 
-## Dataset
+- Render URL: https://dashboard.render.com/web/srv-d5823r6r433s73f19veg
+- GitHub repo: https://github.com/Munachimso30/movie-review-sentiment-classifier
 
-- Source: Binary movie review sentiment dataset (CSV) with two columns:
-  - `review`: text of the movie review
-  - `sentiment`: 0 = negative, 1 = positive [web:67][web:68]
-- Size: 10,000 reviews (balanced classes). [web:67][web:68]
+## Project overview
 
-## Method
+- Binary sentiment classification (positive vs negative) on movie reviews.
+- Text preprocessing and TF-IDF vectorization.
+- Logistic regression model trained and saved with `joblib`.
+- FastAPI app with:
+  - HTML form at `/` and `/predict`.
+  - JSON API at `/api/predict` with Pydantic validation.
+- Predictions optionally logged to `predictions.csv`. [file:1][web:136][web:142]
 
-1. Load the CSV with pandas. [web:53]
-2. Split data into train (80%) and test (20%) sets using `train_test_split` with stratification. [web:46]
-3. Convert text to TF-IDF features using `TfidfVectorizer`. [web:46]
-4. Train a logistic regression classifier on the training data. [web:46]
-5. Evaluate on the test set using accuracy, classification report, and confusion matrix. [web:46][web:53]
+## API endpoints
 
-## How to run
+- `GET /`  
+  - Renders the HTML form where you can paste a movie review and see the prediction.
 
-1. Install dependencies: pip install numpy pandas scikit-learn matplotlib
+- `POST /predict` (HTML form)  
+  - Accepts form field `text` and renders the same HTML template with prediction results.
 
+- `GET /info`  
+  - Returns basic JSON service information and links to key endpoints.
 
-2. Ensure the dataset is located at: data/reviews.csv
+- `POST /api/predict` (JSON)  
+  - Request body (JSON):
+    ```
+    {
+      "review_text": "This movie was amazing, I really enjoyed it!"
+    }
+    ```
+  - Response body:
+    ```
+    {
+      "label": "positive",
+      "probability": 0.93
+    }
+    ```
+  - Validation:
+    - `review_text` must be a non-empty string between 3 and 5000 characters.
+    - Returns 400 if the text is empty after trimming.
+    - Returns 422 if the JSON is missing `review_text` or has the wrong type. [file:1][web:58][web:67][web:73]
 
+## Running locally
 
-3. Run the baseline experiment: python sentiment_baseline.py
-
-
-
-4. Run the unigram experiment:python sentiment_unigrams.py
-
-
-
-## Results
-
-- Experiment 1 (1–2-gram TF-IDF + Logistic Regression): accuracy ≈ 0.8635 on test set.  
-- Experiment 2 (1-gram TF-IDF + Logistic Regression): accuracy ≈ <PUT_NEW_ACCURACY_HERE> on test set.
 
 See `experiments.md` for more details.
 
