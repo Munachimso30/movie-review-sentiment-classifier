@@ -7,7 +7,6 @@
 <body>
     <h1>Movie Review Sentiment</h1>
 
-    <!-- Simple HTML form that posts to /predict -->
     <form action="/predict" method="post">
         <textarea name="text" rows="4" cols="60"
                   placeholder="Type your review here"></textarea><br>
@@ -15,10 +14,8 @@
     </form>
 
     <h2>Result</h2>
-    <pre id="result">
-        {% if result %}
-{{ result }}
-        {% endif %}
-    </pre>
+    {% if result %}
+        <pre>{{ result }}</pre>
+    {% endif %}
 </body>
 </html>
